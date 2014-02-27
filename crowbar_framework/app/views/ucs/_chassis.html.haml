@@ -4,11 +4,11 @@
       = icon_tag "collapse-down"
 
     %h2.panel-title
-      %a{ :href => "##{chassis.attributes["dn"].parameterize}", "data-toggle" => "collapse", "data-parent" => "#accordion" }
+      %a{ href: "##{chassis.attributes["dn"].parameterize}", data: { toggle: "collapse", parent: "#accordion" } } 
         DN:
         = chassis.attributes["dn"]
 
-  .panel-body.panel-collapse.collapse{ :id => chassis.attributes["dn"].parameterize }
+  .panel-body.panel-collapse.collapse{ id: chassis.attributes["dn"].parameterize }
     - @blades.each do |blade|
       - if blade.attributes["chassisId"] == chassis.attributes["id"]
         .col-md-4.col-xs-6
