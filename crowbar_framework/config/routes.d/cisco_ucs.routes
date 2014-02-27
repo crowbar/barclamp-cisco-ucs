@@ -17,10 +17,10 @@
 
 resources :ucs, only: [] do
   collection do
-    match :settings, via: [:get], as: :ucs_settings
-    match :login, via: [:post], as: :ucs_login
-    match :logout, via: [:get], as: :ucs_logout
-    match :edit, via: [:get], as: :ucs_edit
-    match :update, via: [:put], as: :ucs_update
+    match :settings, via: [:get], as: :settings
+    match :login, via: [:post], as: :login
+    match :logout, via: [:get], as: :logout
+    match :edit, via: [:get], as: :edit
+    match :update, via: [:put], as: :update
   end
 end
