@@ -1,10 +1,12 @@
-# Copyright 2013 SUSE, LLC
+#
+# Copyright 2011-2013, Dell
+# Copyright 2013-2014, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#  http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,13 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
-# Original author: the1drewharris
-#
-
-# Things that still should be done:
-# - apply SUSE Cloud admin CSS to views
-# - encrypt the password in xml document
 
 require "net/http"
 require "uri"
@@ -26,8 +21,14 @@ require "rexml/document"
 require "cgi"
 
 class XMLAPIRequestError < StandardError
-  def initialize(exception); @exception = exception end
-  def message;               @exception.message     end
+  def initialize(exception)
+    @exception = exception
+  end
+
+  def message
+    @exception.message
+  end
+
   alias_method :to_s, :message
 end
 
@@ -39,7 +40,7 @@ class XMLAPIResponseFailure < StandardError
   end
 
   def message
-    "%d %s" % [ @response.code, @response.message ]
+    "%d %s" % [@response.code, @response.message]
   end
 
   alias_method :to_s, :message
@@ -47,11 +48,11 @@ end
 
 class UcsController < ApplicationController
   CREDENTIALS_XML_PATH = '/etc/crowbar/cisco-ucs/credentials.xml'
+
   COMPUTE_SERVICE_PROFILE = 'suse-cloud-compute'
   STORAGE_SERVICE_PROFILE = 'suse-cloud-storage'
 
-  before_filter :authenticate, :only => [ :edit, :update ]
-  #before_filter :authenticate, :except => [ :settings, :login ]
+  before_action :authenticate, only: [:edit, :update]
 
   def handle_exception(exception, log_message, ui_message)
     logger.warn "Cisco UCS: #{log_message}: #{exception}"
