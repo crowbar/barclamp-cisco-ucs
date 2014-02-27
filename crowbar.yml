@@ -1,10 +1,12 @@
-# Copyright 2013 SUSE, LLC
+#
+# Copyright 2011-2013, Dell
+# Copyright 2013-2014, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +21,14 @@ barclamp:
   description: Integration with Cisco Unified Computing System platform
   version: 0
   user_managed: false
+  requires:
+    - '@crowbar'
   member:
     - crowbar
+  os_support:
+    - ubuntu-12.04
+    - centos-6.4
+    - redhat-6.4
 
 crowbar:
   layout: 1
@@ -31,4 +39,5 @@ crowbar:
 
 nav:
   utils:
-    ucs_dashboard: ucs_edit_path
+    ucs_dashboard: 
+      route: edit_ucs_path
