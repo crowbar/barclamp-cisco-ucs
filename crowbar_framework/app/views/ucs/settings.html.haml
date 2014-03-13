@@ -7,7 +7,7 @@
         .btn-group.pull-right
           = link_to t(".edit"), edit_ucs_path, class: "btn btn-default"
 
-- form_tag logged_in? ? ucs_logout_path : ucs_login_path, role: "form" do
+= form_tag logged_in? ? logout_ucs_path : login_ucs_path, role: "form" do
   .panel.panel-default
     .panel-body
       - if logged_in?

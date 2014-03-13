@@ -6,7 +6,7 @@
       .btn-group.pull-right
         = link_to t(".settings"), settings_ucs_path, class: "btn btn-default"
 
-- form_tag(ucs_update_path) do
+= form_tag(update_ucs_path) do
   .panel.panel-default#accordion
     = render partial: "chassis"
     = render partial: "rack"
