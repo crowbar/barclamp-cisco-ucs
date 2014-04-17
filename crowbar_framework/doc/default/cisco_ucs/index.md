@@ -1,16 +1,4 @@
-% Title: Cisco UCS documentation
-% Tags: cisco-ucs
-% Author: Unknown
-% License: Apache 2
-% Copyright: Copyright 2012-2014, SUSE LINUX Products GmbH
-% Date: Unknown
-% Order: 100
-% AppURL: /crowbar/modules/1.0
-% Parent: book-barclamps
-% NextTopic: root
-% Format: markdown
-
-# Cisco UCS Documentation
+# Cisco UCS
 
 This barclamp communicates with a Cisco UCS Manager instance 
 via its XML-based API server, and can perform the following 
