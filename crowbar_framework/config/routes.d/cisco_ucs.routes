@@ -15,25 +15,12 @@
 # limitations under the License.
 #
 
-barclamp:
-  name: 'cisco_ucs'
-  display: 'Cisco UCS'
-  description: 'Integration with Cisco Unified Computing System platform'
-  version: 0
-  user_managed: false
-  member:
-    - 'crowbar'
-  requires:
-    - '@crowbar'
-
-crowbar:
-  layout: 1
-  order: 20
-  run_order: 20
-  chef_order: 20
-  navigation_order: -1
-
-nav:
-  utils:
-    ucs_dashboard: 
-      route: 'edit_ucs_path'
+resources :ucs, only: [] do
+  collection do
+    match :settings, via: [:get], as: :settings
+    match :login, via: [:post], as: :login
+    match :logout, via: [:get], as: :logout
+    match :edit, via: [:get], as: :edit
+    match :update, via: [:put], as: :update
+  end
+end

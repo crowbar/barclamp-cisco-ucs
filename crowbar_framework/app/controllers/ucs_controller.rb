@@ -1,10 +1,13 @@
-# Copyright 2013 SUSE, LLC
+# -*- encoding : utf-8 -*-
+#
+# Copyright 2011-2013, Dell
+# Copyright 2013-2014, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#  http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,13 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
-# Original author: the1drewharris
-#
-
-# Things that still should be done:
-# - apply SUSE Cloud admin CSS to views
-# - encrypt the password in xml document
 
 require "net/http"
 require "uri"
@@ -26,8 +22,14 @@ require "rexml/document"
 require "cgi"
 
 class XMLAPIRequestError < StandardError
-  def initialize(exception); @exception = exception end
-  def message;               @exception.message     end
+  def initialize(exception)
+    @exception = exception
+  end
+
+  def message
+    @exception.message
+  end
+
   alias_method :to_s, :message
 end
 
@@ -39,7 +41,7 @@ class XMLAPIResponseFailure < StandardError
   end
 
   def message
-    "%d %s" % [ @response.code, @response.message ]
+    "%d %s" % [@response.code, @response.message]
   end
 
   alias_method :to_s, :message
@@ -47,11 +49,11 @@ end
 
 class UcsController < ApplicationController
   CREDENTIALS_XML_PATH = '/etc/crowbar/cisco-ucs/credentials.xml'
+
   COMPUTE_SERVICE_PROFILE = 'suse-cloud-compute'
   STORAGE_SERVICE_PROFILE = 'suse-cloud-storage'
 
-  before_filter :authenticate, :only => [ :edit, :update ]
-  #before_filter :authenticate, :except => [ :settings, :login ]
+  before_action :authenticate, only: [:edit, :update]
 
   def handle_exception(exception, log_message, ui_message)
     logger.warn "Cisco UCS: #{log_message}: #{exception}"
@@ -105,7 +107,7 @@ class UcsController < ApplicationController
 
   def logout
     unless logged_in?
-      redirect_to ucs_settings_path, :notice => 'Already logged out from UCS.'
+      redirect_to settings_ucs_url, :notice => 'Already logged out from UCS.'
       return
     end
 
@@ -117,7 +119,7 @@ class UcsController < ApplicationController
       logger.warn "Cisco UCS: logging out without credentials"
     end
     set_ucs_session_cookie(nil)
-    redirect_to ucs_settings_path, :notice => 'Logged out from UCS.'
+    redirect_to settings_ucs_url, :notice => 'Logged out from UCS.'
   end
 
   def edit
@@ -184,7 +186,7 @@ class UcsController < ApplicationController
       action = "cycle-immediate"
     else
       logger.warn "Cisco UCS: update request had invalid action '#{params[:updateAction]}'"
-      redirect_to ucs_edit_path, :notice => 'You must choose an action.'
+      redirect_to edit_ucs_url, :notice => 'You must choose an action.'
       return
     end
 
@@ -195,7 +197,7 @@ class UcsController < ApplicationController
     end
 
     if match_count == 0
-      redirect_to ucs_edit_path, :notice => 'You must select at least one node.'
+      redirect_to edit_ucs_url, :notice => 'You must select at least one node.'
       return nil
     end
 
@@ -205,7 +207,7 @@ class UcsController < ApplicationController
       "</inConfigs></configConfMos>"
 
     serverResponseDoc = sendXML(@updateDoc)
-    redirect_to ucs_edit_path, :notice => 'Your update has been applied.'
+    redirect_to edit_ucs_url, :notice => 'Your update has been applied.'
   end
 
   private
@@ -323,19 +325,19 @@ class UcsController < ApplicationController
   def aaaLogin(ucs_url, username, password)
     if ucs_url.blank?
       logger.debug "Cisco UCS: missing login URL"
-      redirect_to ucs_settings_path, :alert => "You must provide a login URL"
+      redirect_to settings_ucs_url, :alert => "You must provide a login URL"
       return nil
     elsif ! ucs_url.end_with? '/nuova'
       logger.debug "Cisco UCS: login URL didn't have the correct '/nuova' ending"
-      redirect_to ucs_settings_path, :alert => "Login URL should end in '/nuova'"
+      redirect_to settings_ucs_url, :alert => "Login URL should end in '/nuova'"
       return nil
     elsif username.blank?
       logger.debug "Cisco UCS: missing login name"
-      redirect_to ucs_settings_path, :alert => "You must provide a login name"
+      redirect_to settings_ucs_url, :alert => "You must provide a login name"
       return nil
     elsif password.blank?
       logger.debug "Cisco UCS: missing login password"
-      redirect_to ucs_settings_path, :alert => "You must provide a login password"
+      redirect_to settings_ucs_url, :alert => "You must provide a login password"
       return nil
     end
 
@@ -348,12 +350,12 @@ class UcsController < ApplicationController
     end
     unless valid_uri
       logger.debug "Cisco UCS: login URL is not a HTTP/HTTPS URL"
-      redirect_to ucs_settings_path, :alert => "Login URL should be a HTTP/HTTPS URL"
+      redirect_to settings_ucs_url, :alert => "Login URL should be a HTTP/HTTPS URL"
       return nil
     end
     unless uri.host
       logger.debug "Cisco UCS: login URL does not have a valid hostname"
-      redirect_to ucs_settings_path, :alert => "Login URL should have a valid hostname"
+      redirect_to settings_ucs_url, :alert => "Login URL should have a valid hostname"
       return nil
     end
 
@@ -364,14 +366,14 @@ class UcsController < ApplicationController
     rescue REXML::ParseException => e
       logger.warn "Cisco UCS: REXML parse failure during aaaLogin: #{e}"
       message = "Failed to parse response from UCS API server; did your API URL end in '/nuova'?"
-      redirect_to ucs_settings_path, :notice => message
+      redirect_to settings_ucs_url, :notice => message
       return nil
     end
 
     ucs_cookie = cookie_from_response(loginDoc)
     unless ucs_cookie
       # FIXME: improve cookie validation
-      redirect_to ucs_settings_path, :notice => "Login failed to obtain session cookie from Cisco UCS"
+      redirect_to settings_ucs_url, :notice => "Login failed to obtain session cookie from Cisco UCS"
       return nil
     end
 
@@ -394,12 +396,12 @@ class UcsController < ApplicationController
 
   def authenticate
     unless have_credentials?
-      redirect_to ucs_settings_path, :notice => t('barclamp.ucs.login.provide_creds')
+      redirect_to settings_ucs_url, :notice => t('barclamp.ucs.login.provide_creds')
       return
     end
 
     unless logged_in?
-      redirect_to ucs_settings_path, :notice => t('barclamp.ucs.login.please_login')
+      redirect_to settings_ucs_url, :notice => t('barclamp.ucs.login.please_login')
       return
     end
 

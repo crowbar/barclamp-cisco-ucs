@@ -5,9 +5,9 @@
 
       - if logged_in?
         .btn-group.pull-right
-          = link_to t(".edit"), ucs_edit_path, :class => "btn btn-default"
+          = link_to t(".edit"), edit_ucs_path, class: "btn btn-default"
 
-- form_tag logged_in? ? ucs_logout_path : ucs_login_path, :role => "form" do
+= form_tag logged_in? ? logout_ucs_path : login_ucs_path, role: "form" do
   .panel.panel-default
     .panel-body
       - if logged_in?
@@ -15,23 +15,23 @@
           = t(".needs_logout")
 
       .form-group
-        %label{ :for => :ucs_url }
+        %label{ for: :ucs_url }
           = t(".ucs_url")
-        = text_field_tag :ucs_url, @ucs_url, :class => "form-control", :disabled => logged_in? ? "disabled" : nil
+        = text_field_tag :ucs_url, @ucs_url, class: "form-control", disabled: logged_in? ? "disabled" : nil
 
       .form-group
-        %label{ :for => :username }
+        %label{ for: :username }
           = t(".username")
-        = text_field_tag :username, @username, :class => "form-control", :disabled => logged_in? ? "disabled" : nil
+        = text_field_tag :username, @username, class: "form-control", disabled: logged_in? ? "disabled" : nil
 
       .form-group
-        %label{ :for => :password }
+        %label{ for: :password }
           = t(".password")
-        = password_field_tag :password, @password, :class => "form-control", :disabled => logged_in? ? "disabled" : nil
+        = password_field_tag :password, @password, class: "form-control", disabled: logged_in? ? "disabled" : nil
 
     .panel-footer.text-right
       .btn-group
         - if logged_in?
-          %input.btn.btn-default{ :type => "submit", :name => "logout", :value => t(".logout") }
+          %input.btn.btn-default{ type: "submit", name: "logout", value: t(".logout") }
         - else
-          %input.btn.btn-default{ :type => "submit", :name => "login", :value => t(".login") }
+          %input.btn.btn-default{ type: "submit", name: "login", value: t(".login") }

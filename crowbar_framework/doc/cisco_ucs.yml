@@ -15,25 +15,19 @@
 # limitations under the License.
 #
 
-barclamp:
-  name: 'cisco_ucs'
-  display: 'Cisco UCS'
-  description: 'Integration with Cisco Unified Computing System platform'
-  version: 0
-  user_managed: false
-  member:
-    - 'crowbar'
-  requires:
-    - '@crowbar'
+root:
+  topic_meta_data:
+    author: 'Multiple authors'
+    license: 'Apache 2'
+    copyright: '2014 by Dell, Inc'
+    date: 'June 1, 2012'
+    order: 'alpha'
+    url: '/crowbar/crowbar/1.0'
+    format: 'markdown'
 
-crowbar:
-  layout: 1
-  order: 20
-  run_order: 20
-  chef_order: 20
-  navigation_order: -1
-
-nav:
-  utils:
-    ucs_dashboard: 
-      route: 'edit_ucs_path'
+  barclamps:
+    cisco_ucs:
+      topic_meta_data:
+        file: 'index'
+        url: '/crowbar/crowbar/1.0?selected=cisco-ucs'
+        order: 100
